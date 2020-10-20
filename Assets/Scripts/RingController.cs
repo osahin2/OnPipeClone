@@ -62,7 +62,6 @@ public class RingController : MonoBehaviour
         bestScore = PlayerPrefs.GetInt("bestScoreSave");
         cam = GameObject.FindGameObjectWithTag("MainCamera");
         gameController = GameObject.FindGameObjectWithTag("GameController");
-        gameControl = gameController.GetComponent<GameController>();
 
         cameraFirstPos = cam.transform.position - transform.position;
     }
@@ -122,6 +121,7 @@ public class RingController : MonoBehaviour
     public void GetScore()
     {
         score++;
+        UIGlassBar.Instance.SetValue(score/10);
         scoreText.text = ""+ score;
     }
     //Finish Line

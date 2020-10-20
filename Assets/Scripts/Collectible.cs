@@ -44,6 +44,7 @@ public class Collectible : MonoBehaviour
         {
             rb.velocity = direction * forceSpeed;
             anim.Play();
+            controller.GetScore();
         }
     }
 }
