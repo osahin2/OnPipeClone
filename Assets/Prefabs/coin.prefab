@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: -1200311934902222679}
   - component: {fileID: -6370982131554500515}
   - component: {fileID: 7986428018069246775}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: coin
   m_TagString: collectible
   m_Icon: {fileID: 0}
@@ -126,7 +126,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3639b564083d8bc4586be29319d9b5d2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  forceSpeed: 5
+  anim: {fileID: 2456599672737392948}
+  rb: {fileID: 7986428018069246775}
+  forceSpeed: 1
 --- !u!54 &7986428018069246775
 Rigidbody:
   m_ObjectHideFlags: 0

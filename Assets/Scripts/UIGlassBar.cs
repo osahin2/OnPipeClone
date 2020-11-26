@@ -5,17 +5,29 @@ using UnityEngine;
 
 public class UIGlassBar : MonoBehaviour
 {
-    public static UIGlassBar Instance { get; private set; }
+    public UIGlassBar()
+    {
+        instance = this;
+    }
+
+    private static UIGlassBar instance;
+
+    public static UIGlassBar Instance
+    {
+        get
+        {
+            if (instance == null)
+            {
+                instance = new UIGlassBar();
+            }
+            return instance;
+        }
+    }
 
     [SerializeField] private Image glassMask;
     private float originalSize;
-
-    private void Awake()
-    {
-        Instance = this;    
-    }
-
-    void Start()
+    
+    public void Initialized()
     {
         originalSize = glassMask.rectTransform.rect.height;
     }

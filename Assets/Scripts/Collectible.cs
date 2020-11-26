@@ -1,11 +1,14 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class Collectible : MonoBehaviour
 {
-    Animation anim;
-    Rigidbody rb;
+    public static event Action<Collectible> OnEnterCollectible;
+
+
     Vector3 direction;
     float randomPush;
     Vector3 startPos;
@@ -13,38 +16,46 @@ public class Collectible : MonoBehaviour
     float changeTime;
     public float forceSpeed;
 
-    void Awake()
+    public void Initialized()
     {
-        anim = GetComponent<Animation>();
-        rb = GetComponent<Rigidbody>();
-
-        randomPush = Random.Range(-1.0f, 1.0f);
-        direction = new Vector3(randomPush, 1.0f, -2.0f);
-
         startPos = transform.position;
         startRot = transform.rotation;
-
+        ExitControl.OnExitCollider += SetCollectiblePos;
     }
-    private void Update()
+    private void OnEnable()
     {
-        changeTime += Time.deltaTime;
+        randomPush = Random.Range(-1.0f, 1.0f);
+        direction = new Vector3(randomPush, 1.0f, -2.0f);
+    }
 
-        if (changeTime > 5.0f)
+    private void SetCollectiblePos(ExitControl exitControl)
+    {
+        if (gameObject.TryGetComponent(out Rigidbody rb))
         {
             rb.velocity = Vector3.zero;
-            transform.localPosition = startPos;
-            transform.rotation = startRot;
-            changeTime = 0;
         }
+        transform.localPosition = startPos;
+        transform.rotation = startRot;
     }
+
     void OnTriggerEnter(Collider col)
     {
-        RingController controller = col.gameObject.GetComponentInParent<RingController>();
         if (col.gameObject.tag=="Player")
         {
-            rb.velocity = direction * forceSpeed;
-            anim.Play();
-            controller.GetScore();
+            if (gameObject.TryGetComponent(out Rigidbody rb))
+            {
+                rb.AddForce(direction * forceSpeed, ForceMode.Impulse);
+            }
+            if (gameObject.TryGetComponent(out Animation anim))
+            {
+                anim.Play();
+            }
+            OnEnterCollectible?.Invoke(this);
         }
+    }
+
+    private void OnDestroy()
+    {
+        ExitControl.OnExitCollider -= SetCollectiblePos;
     }
 }

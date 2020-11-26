@@ -1,15 +1,16 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class Damager : MonoBehaviour
 {
+    public static event Action<Damager> OnDamagerEnter;
     void OnTriggerEnter(Collider col)
     {
-        RingController controller = col.gameObject.GetComponentInParent<RingController>();
-        if (col.gameObject.tag=="Player")
+        if (col.gameObject.tag == "Player")
         {
-            controller.HitRing();
+            OnDamagerEnter?.Invoke(this);
         }
     }
 }

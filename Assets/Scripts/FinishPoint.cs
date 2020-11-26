@@ -1,15 +1,17 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class FinishPoint : MonoBehaviour
 {
+    public static event Action<FinishPoint> OnEnterFinish;
+
     void OnTriggerEnter(Collider col)
     {
-        RingController controller = col.gameObject.GetComponentInParent<RingController>();
         if (col.gameObject.tag=="Player")
         {
-            controller.Finish();
+            OnEnterFinish?.Invoke(this);
         }
     }
 }

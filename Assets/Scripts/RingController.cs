@@ -1,147 +1,85 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class RingController : MonoBehaviour
 {
-    Vector3 cameraFirstPos, cameraLastPos;
-    Vector3 scaleCollisionExit = new Vector3(2.0f, 2.0f, 0f);
+    private const float RING_SCALE_Z = 0.2f;
 
-    Rigidbody rigidBody;
-    GameObject cam;
-    GameObject gameController;
-    GameController gameControl;
+    [SerializeField] private Transform ringRayTransform;
+    [SerializeField] private GameObject cam;
+    [SerializeField] private float ringSpeed;
+    [SerializeField] private float scaleLerpFactor;
+    public LayerMask ringRayLayer;
 
-    public GameObject finishRing;
-    public float scaleSpeed = 200.0f;
-    public float ringSpeed = 5.0f;
-    public Vector3 scaleChange = new Vector3(1.0f, 1.0f, 0f);
-    public Text scoreText;
-    public Text bestScoreText;
-    public Text tapToStart;
-    public Button coins;
-    public Button rings;
+    private Vector3 cameraFirstPos, cameraLastPos;
+    private Vector3 rayTargetScale;
+    private Vector3 targetPos;
 
+    private RaycastHit raycastHit;
 
-    private int score;
-    public int Score
+    
+    private bool scaleControl;
+    
+
+    public void Initialized()
     {
-        get
-        {
-            return score;
-        }
-    }
-    int bestScore;
-
-    private bool _endGameControl=false;
-    public bool endGameControl
-    {
-        get
-        {
-            return _endGameControl;
-        }
-            
-    }
-
-    private bool _finishControl = false;
-    public bool finishControl
-    {
-        get
-        {
-            return _finishControl;
-        }
-    }
-
-    int finishCounter=0;
-
-    void Start()
-    {
-        rigidBody = GetComponent<Rigidbody>();
-
-        bestScore = PlayerPrefs.GetInt("bestScoreSave");
-        cam = GameObject.FindGameObjectWithTag("MainCamera");
-        gameController = GameObject.FindGameObjectWithTag("GameController");
-
+        InputEventHandler.PointerDowned += MinimizeRingScale;
+        InputEventHandler.PointerUpped += GetRingOriginalSize;
         cameraFirstPos = cam.transform.position - transform.position;
+        StartCoroutine(Move());
+    }
+
+    public void StopInputs()
+    {
+        InputEventHandler.PointerDowned -= MinimizeRingScale;
+        InputEventHandler.PointerUpped -= GetRingOriginalSize;
+    }
+
+    private void MinimizeRingScale(PointerEventData eventData)
+    {
+        scaleControl = true;
+    }
+
+    private void GetRingOriginalSize(PointerEventData eventData)
+    {
+        scaleControl = false;
+        transform.localScale = new Vector3(2f, 2f, 0.2f);
     }
     
-    void FixedUpdate()
+
+    private IEnumerator Move()
     {
-        //Change Ring Scale
-        if (Input.GetKey(KeyCode.Mouse0))
+        while (true)
         {
-            scoreText.enabled = true;
-            tapToStart.enabled = false;
-            coins.gameObject.SetActive(false);
-            rings.gameObject.SetActive(false);
-            rigidBody.transform.localScale -= scaleChange * scaleSpeed * Time.fixedDeltaTime;
+            CameraFollow();
+            MoveRing();
+            if (scaleControl)
+            {
+                if (Physics.Raycast(ringRayTransform.position, Vector3.down, out raycastHit, 1000, ringRayLayer))
+                {
+                    rayTargetScale = new Vector3(raycastHit.collider.transform.localScale.x, raycastHit.collider.transform.localScale.z, RING_SCALE_Z);
+                    Debug.DrawLine(ringRayTransform.position, raycastHit.point, Color.magenta);
+                    transform.localScale = Vector3.Lerp(transform.localScale, rayTargetScale, scaleLerpFactor);
+                }
+            }
+            yield return null;
         }
-        else if (rigidBody.transform.localScale.x < 100)
-        {
-            scaleChange = scaleCollisionExit;
-            rigidBody.transform.localScale += scaleChange * scaleSpeed * Time.fixedDeltaTime;
-        }
-
-        //Ring Move
-        Vector3 position = rigidBody.position;
-        position.z = position.z + ringSpeed * Time.deltaTime;
-        rigidBody.MovePosition(position);
-
-        if (finishCounter == 6)
-        {
-            gameController.GetComponent<ObjectPooler>().StopAllCoroutines();
-            Instantiate(finishRing, new Vector3(0, 0, gameObject.transform.position.z + 18), Quaternion.identity);
-            finishCounter++;
-        }
-
-        if(_endGameControl)
-        {
-            gameObject.GetComponent<RingController>().enabled = false;
-        }
-        
     }
-    private void LateUpdate()
+
+    private void MoveRing()
     {
-        if (!_finishControl)
+        transform.position += Time.deltaTime * ringSpeed * Vector3.forward;
+    }
+
+    private void CameraFollow()
+    {
+        if (!GameController.Instance.ControlFinish)
         {
-            //Camera Control
             cameraLastPos = cameraFirstPos + transform.position;
             cam.transform.position = cameraLastPos;
-        }
-    }
-
-    //Stop script when ring hits obstacles
-    public void HitRing()
-    {
-        _endGameControl = true;
-        ScoreSave();
-    }
-
-    public void GetScore()
-    {
-        score++;
-        UIGlassBar.Instance.SetValue(score/10);
-        scoreText.text = ""+ score;
-    }
-    //Finish Line
-    public void Finish()
-    {
-        gameObject.GetComponentInChildren<BoxCollider>().enabled = false;
-        ScoreSave();
-        _finishControl = true;
-    }
-    public void FinishCounter()
-    {
-        finishCounter++;
-    }
-
-    void ScoreSave()
-    {
-        if (score > bestScore)
-        {
-            bestScore = score;
-            PlayerPrefs.SetInt("bestScoreSave", bestScore);
         }
     }
     

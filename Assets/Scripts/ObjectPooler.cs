@@ -11,23 +11,21 @@ public class ObjectPoolItem
 
 public class ObjectPooler : MonoBehaviour
 {
-    private Transform poolStart;
+    [SerializeField] private Transform poolStart;
 
     public List<GameObject> pooledObjects;
     public List<ObjectPoolItem> itemsToPool;
     
 
     private int counter = 0;
-    private Vector3 distance;
 
-    private void Awake()
+    private Vector3 distance;
+    public Vector3 Distance => distance;
+
+    public void Initialized()
     {
-        poolStart = GameObject.FindGameObjectWithTag("poolStart").GetComponent<Transform>();
         distance = poolStart.transform.position;
 
-    }
-    void Start()
-    {
         pooledObjects = new List<GameObject>();
 
         foreach (ObjectPoolItem item in itemsToPool)
@@ -51,7 +49,7 @@ public class ObjectPooler : MonoBehaviour
                 item.objectToPool = GetPooledCylinders();
                 item.objectToPool.transform.position = new Vector3(0, 0, distance.z += 6);
                 item.objectToPool.SetActive(true);
-                yield return new WaitForSeconds(1.2f);
+                yield return new WaitForSeconds(3f);
             }
         }
     }

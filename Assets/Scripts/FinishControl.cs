@@ -1,28 +1,26 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class FinishControl : MonoBehaviour
 {
-
-    float changeTime = 0;
+    public static event Action<FinishControl> OnEnterFinishControl;
+    
     void OnTriggerEnter(Collider col)
     {
-        RingController controller = col.gameObject.GetComponentInParent<RingController>();
 
         if (col.gameObject.tag=="Player")
         {
+            OnEnterFinishControl?.Invoke(this);
             gameObject.GetComponent<BoxCollider>().enabled = false;
-            controller.FinishCounter();
+            StartCoroutine(FinishControlColliderTrue());
         }
     }
-    void Update()
+
+    private IEnumerator FinishControlColliderTrue()
     {
-        changeTime += Time.deltaTime;
-        if (changeTime>5.0f)
-        {
-            gameObject.GetComponent<BoxCollider>().enabled = true;
-        }
-        
+        yield return new WaitForSeconds(2.0f);
+        gameObject.GetComponent<BoxCollider>().enabled = true;
     }
 }

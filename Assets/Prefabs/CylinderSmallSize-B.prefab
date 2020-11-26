@@ -13,9 +13,9 @@ GameObject:
   - component: {fileID: 5478135569613977985}
   - component: {fileID: 5203068160623706857}
   - component: {fileID: 8865262224472920483}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: DamageZone (1)
-  m_TagString: Untagged
+  m_TagString: damager
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -120,7 +120,6 @@ GameObject:
   - component: {fileID: 1632792893638266034}
   - component: {fileID: 1632792893638266036}
   - component: {fileID: 1632792893638266037}
-  - component: {fileID: 2851361461419502999}
   - component: {fileID: 7312920750219845592}
   m_Layer: 0
   m_Name: CylinderSmallSize-B
@@ -196,18 +195,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!114 &2851361461419502999
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1632792893638266035}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 922441de375fc0149a0f01d7c83e3476, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!136 &7312920750219845592
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -298,7 +285,7 @@ GameObject:
   - component: {fileID: 1152028164343625129}
   - component: {fileID: 9197130206302221242}
   - component: {fileID: 6037334221983155707}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: FinishCounter
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -357,9 +344,9 @@ GameObject:
   - component: {fileID: 5164559775070464721}
   - component: {fileID: 4988321682884855887}
   - component: {fileID: 1913788977310460746}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: DamageZone
-  m_TagString: Untagged
+  m_TagString: damager
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
