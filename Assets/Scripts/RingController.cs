@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -29,7 +30,6 @@ public class RingController : MonoBehaviour
         InputEventHandler.PointerDowned += MinimizeRingScale;
         InputEventHandler.PointerUpped += GetRingOriginalSize;
         cameraFirstPos = cam.transform.position - transform.position;
-        StartCoroutine(Move());
     }
 
     public void StopInputs()
@@ -48,24 +48,19 @@ public class RingController : MonoBehaviour
         scaleControl = false;
         transform.localScale = new Vector3(2f, 2f, 0.2f);
     }
-    
 
-    private IEnumerator Move()
+
+    private void FixedUpdate()
     {
-        while (true)
+        CameraFollow();
+        MoveRing();
+        if (scaleControl && Physics.Raycast(ringRayTransform.position, Vector3.down, out raycastHit, 1000, ringRayLayer))
         {
-            CameraFollow();
-            MoveRing();
-            if (scaleControl)
-            {
-                if (Physics.Raycast(ringRayTransform.position, Vector3.down, out raycastHit, 1000, ringRayLayer))
-                {
-                    rayTargetScale = new Vector3(raycastHit.collider.transform.localScale.x, raycastHit.collider.transform.localScale.z, RING_SCALE_Z);
-                    Debug.DrawLine(ringRayTransform.position, raycastHit.point, Color.magenta);
-                    transform.localScale = Vector3.Lerp(transform.localScale, rayTargetScale, scaleLerpFactor);
-                }
-            }
-            yield return null;
+            var transform1 = raycastHit.collider.transform;
+            var localScale = transform1.localScale;
+            rayTargetScale = new Vector3(localScale.x, localScale.z, RING_SCALE_Z);
+            Debug.DrawLine(ringRayTransform.position, raycastHit.point, Color.magenta);
+            transform.localScale = Vector3.Lerp(transform.localScale, rayTargetScale, scaleLerpFactor);
         }
     }
 
@@ -76,11 +71,9 @@ public class RingController : MonoBehaviour
 
     private void CameraFollow()
     {
-        if (!GameController.Instance.ControlFinish)
-        {
-            cameraLastPos = cameraFirstPos + transform.position;
-            cam.transform.position = cameraLastPos;
-        }
+        if (GameController.Instance.ControlFinish) return;
+        cameraLastPos = cameraFirstPos + transform.position;
+        cam.transform.position = cameraLastPos;
     }
     
 }

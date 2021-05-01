@@ -9,12 +9,13 @@ public class GameController : MonoBehaviour
 {
     public static GameController Instance { get; private set; }
 
-    [Header("Scene Objects")]
+    [Header("GameObject References")]
     [SerializeField] private GameObject finishRing;
     [SerializeField] private RingController ringController;
     [SerializeField] private BoxCollider exitControlBoundary;
     [SerializeField] private Collectible collectible;
     [SerializeField] private ObjectPooler pooler;
+    [SerializeField] private FinishPoint finishPoint;
     [Header("UI Elements")]
     [SerializeField] private Text scoreText;
     [SerializeField] private Text bestScoreText;
@@ -34,21 +35,15 @@ public class GameController : MonoBehaviour
     private Vector3 finishRingSpawnPos;
 
     private bool controlFinish = false;
-    public bool ControlFinish
-    {
-        get
-        {
-            return controlFinish;
-        }
-    }
+    public bool ControlFinish => controlFinish;
 
     private void Initialized()
     {
         FinishControl.OnEnterFinishControl += FinishCounter;
         Damager.OnDamagerEnter += RingHit;
-        FinishPoint.OnEnterFinish += Finish;
+        finishPoint.OnEnterFinish += Finish;
         InputEventHandler.PointerDowned += TapToStart;
-        Collectible.OnEnterCollectible += GetScore;
+        collectible.OnEnterCollectible += GetScore;
     }
 
     private void Awake()
@@ -136,7 +131,7 @@ public class GameController : MonoBehaviour
         }
     }
 
-    private void GetScore(Collectible collectible)
+    private void GetScore(Collectible collect)
     {
         score++;
         UIGlassBar.Instance.SetValue(score / 10);
@@ -147,9 +142,8 @@ public class GameController : MonoBehaviour
     {
         FinishControl.OnEnterFinishControl -= FinishCounter;
         Damager.OnDamagerEnter -= RingHit;
-        FinishPoint.OnEnterFinish -= Finish;
+        finishPoint.OnEnterFinish -= Finish;
         InputEventHandler.PointerDowned -= TapToStart;
-        Collectible.OnEnterCollectible -= GetScore;
-
+        collectible.OnEnterCollectible -= GetScore;
     }
 }

@@ -39,8 +39,8 @@ public class ObjectPooler : MonoBehaviour
         }
         StartCoroutine(Pooler());
     }
-
-    IEnumerator Pooler()
+    
+    private IEnumerator Pooler()
     {
         while (true)
         {
@@ -54,9 +54,9 @@ public class ObjectPooler : MonoBehaviour
         }
     }
 
-    public GameObject GetPooledCylinders()
+    private GameObject GetPooledCylinders()
     {
-        for (int i = 0; i < pooledObjects.Count; i++)
+        foreach (var t in pooledObjects)
         {
             counter = Random.Range(0, pooledObjects.Count);
             if (!pooledObjects[counter].activeInHierarchy)

@@ -5,11 +5,11 @@ using UnityEngine;
 
 public class FinishPoint : MonoBehaviour
 {
-    public static event Action<FinishPoint> OnEnterFinish;
+    public event Action<FinishPoint> OnEnterFinish;
 
     void OnTriggerEnter(Collider col)
     {
-        if (col.gameObject.tag=="Player")
+        if (col.gameObject.CompareTag("Player"))
         {
             OnEnterFinish?.Invoke(this);
         }

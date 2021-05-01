@@ -6,7 +6,9 @@ using Random = UnityEngine.Random;
 
 public class Collectible : MonoBehaviour
 {
-    public static event Action<Collectible> OnEnterCollectible;
+    public event Action<Collectible> OnEnterCollectible;
+    [SerializeField] private Rigidbody rb;
+    [SerializeField] private Animation anim;
 
 
     Vector3 direction;
@@ -30,26 +32,19 @@ public class Collectible : MonoBehaviour
 
     private void SetCollectiblePos(ExitControl exitControl)
     {
-        if (gameObject.TryGetComponent(out Rigidbody rb))
-        {
-            rb.velocity = Vector3.zero;
-        }
+        rb.isKinematic = true;
+        rb.velocity = Vector3.zero;
         transform.localPosition = startPos;
         transform.rotation = startRot;
     }
 
     void OnTriggerEnter(Collider col)
     {
-        if (col.gameObject.tag=="Player")
+        if (col.gameObject.CompareTag("Player"))
         {
-            if (gameObject.TryGetComponent(out Rigidbody rb))
-            {
-                rb.AddForce(direction * forceSpeed, ForceMode.Impulse);
-            }
-            if (gameObject.TryGetComponent(out Animation anim))
-            {
-                anim.Play();
-            }
+            rb.isKinematic = false;
+            rb.AddForce(direction * forceSpeed, ForceMode.Impulse);
+            anim.Play();
             OnEnterCollectible?.Invoke(this);
         }
     }

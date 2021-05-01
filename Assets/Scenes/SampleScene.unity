@@ -344,6 +344,17 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 2710358965097509232, guid: f08b30eb73627ae468d96c61d61f254b, type: 3}
   m_PrefabInstance: {fileID: 464597693275359448}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &598417993 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4136707292838096949, guid: ab2ffe49b6a43e64c834081a0c5cbdb2, type: 3}
+  m_PrefabInstance: {fileID: 840653865}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 55d039d79478bba47b3781e2b39755d7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &612534936
 GameObject:
   m_ObjectHideFlags: 0
@@ -989,6 +1000,8 @@ MonoBehaviour:
   exitControlBoundary: {fileID: 1688957127}
   collectible: {fileID: -6370982131554500515, guid: f08b30eb73627ae468d96c61d61f254b, type: 3}
   pooler: {fileID: 927374382}
+  finishPoint: {fileID: 4603219796447668596, guid: 242068a9080adcb498e78b92a904f612, type: 3}
+  damager: {fileID: 598417993}
   scoreText: {fileID: 228048824}
   bestScoreText: {fileID: 1764448041}
   tapToRestart: {fileID: 626512683}
@@ -5137,3 +5150,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4f647d49e486d3546a67d393f7dec5b0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  collider: {fileID: 6037334222514844821}

@@ -8,7 +8,7 @@ public class Damager : MonoBehaviour
     public static event Action<Damager> OnDamagerEnter;
     void OnTriggerEnter(Collider col)
     {
-        if (col.gameObject.tag == "Player")
+        if (col.gameObject.CompareTag("Player"))
         {
             OnDamagerEnter?.Invoke(this);
         }
